@@ -4,11 +4,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 't@=o2!@z0(anh%!vhj)gof(q=_=s^)gafcz3@s9%o68)034qrm'
 
-PROJECT_NAME = 'config'
-
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,7 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'stock_manager',
+    'src.stock_manager',
 ]
 
 MIDDLEWARE = [
@@ -30,7 +28,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = '{}.urls'.format(PROJECT_NAME)
+ROOT_URLCONF = 'src.urls'
 
 TEMPLATES = [
     {
@@ -48,7 +46,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
+WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
     'default': {
