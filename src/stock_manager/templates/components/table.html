@@ -1,0 +1,68 @@
+{% verbatim %}
+
+<script type="text/x-template" id="table">
+   <table class="ui green table compact">
+      <thead>
+         <tr>
+            <th v-for="column in columns" :key="column.label">
+               {{ column.label }}
+            </th>
+         </tr>
+      </thead>
+      <tbody>
+         <ui-table-row
+            v-for="row in displayedRows"
+            :key="row.id"
+            :row="row"
+            :columns="columns"
+         />
+      </tbody>
+   </table>
+</script>
+
+<script type="text/x-template" id="table-row">
+   <tr>
+      <td v-for="column in columns">
+         {{ row[column.attr] }}
+      </td>
+   </tr>
+</script>
+
+{% endverbatim %}
+
+
+<script type="text/javascript">
+   Vue.component('ui-table', {
+      props: ['rows'],
+      template: '#table',
+      data: function () { return {
+         columns: [],
+      }},
+      computed: {
+         displayedRows: function() {
+            return this.rows;
+         }
+      },
+      mounted: function () {
+         this.columns = this.$slots.default
+            .filter(component => component.componentOptions)
+            .map(component => component.componentOptions.propsData);
+
+      },
+   });
+
+   Vue.component('ui-table-column', {
+      props: ['attr', 'label'],
+      template: '<div v-if="false"><slot></slot></div>',
+   });
+
+   Vue.component('ui-table-header', {
+      props: ['label'],
+      template: '<th>{{ label }}</th>',
+   });
+
+   Vue.component('ui-table-row', {
+      props: ['columns', 'row'],
+      template: '#table-row',
+   });
+</script>
