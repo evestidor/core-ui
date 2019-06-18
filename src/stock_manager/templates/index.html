@@ -22,8 +22,13 @@
                             v-model="newStock.symbol"
                             placeholder="Ação (e.g. ABEV3)"
                             required="required"
+                            :disabled="loading===true"
                         />
-                        <button type="submit" class="ui green button">
+                        <button
+                            type="submit"
+                            class="ui green button"
+                            :class="{ loading: loading===true }"
+                        >
                             Adicionar
                         </button>
                     </div>
