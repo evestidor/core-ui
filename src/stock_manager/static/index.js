@@ -3,18 +3,28 @@ new Vue({
    delimiters: ['${','}'],
    data: {
       stocks: [],
-      loading: false,
+      availableStocks: [],
+      loading: {},
       newStock: { symbol: null },
    },
    mounted: function() {
       this.getStocks();
+      this.getAvailableStocks();
    },
    methods: {
+      getAvailableStocks: function() {
+         this.loading.dropdown = true;
+         StockAPIService().getAvailableStocks().then(payload => {
+            this.availableStocks = payload;
+            this.loading.dropdown = false;
+         })
+      },
+
       getStocks: function() {
-         this.loading = true;
+         this.loading.table = true;
          StockAPIService().getStocks().then(payload => {
             this.stocks = payload;
-            this.loading = false;
+            this.loading.table = false;
          });
       },
 
@@ -34,6 +44,10 @@ function StockAPIService(state) {
 
       addStock: function(symbol) {
          return post('/stock-manager/stocks/', { symbol });
+      },
+
+      getAvailableStocks: function() {
+         return get('/stock-manager/stocks/available/');
       },
    }
 }

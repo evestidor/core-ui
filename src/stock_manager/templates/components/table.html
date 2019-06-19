@@ -4,7 +4,11 @@
    <table class="ui green table compact">
       <thead>
          <tr>
-            <th v-for="column in columns" :key="column.label">
+            <th
+               v-for="column in columns"
+               :key="column.label"
+               :class="{'right aligned': column.type == 'number' }"
+            >
                {{ column.label }}
             </th>
          </tr>
@@ -22,8 +26,13 @@
 
 <script type="text/x-template" id="table-row">
    <tr>
-      <td v-for="column in columns">
-         {{ row[column.attr] }}
+      <td v-for="column in columns" :class="{'right aligned': column.type == 'number' }">
+         <span v-if="row[column.attr]">
+            {{ row[column.attr] }}
+         </span>
+         <span v-else>
+            -
+         </span>
       </td>
    </tr>
 </script>
@@ -52,7 +61,7 @@
    });
 
    Vue.component('ui-table-column', {
-      props: ['attr', 'label'],
+      props: ['attr', 'label', 'type'],
       template: '<div v-if="false"><slot></slot></div>',
    });
 

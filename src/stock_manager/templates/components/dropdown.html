@@ -1,0 +1,24 @@
+{% verbatim %}
+
+<script type="text/x-template" id="dropdown">
+   <div class="ui fluid search selection dropdown" ref="input" style="min-width:200px;">
+      <slot></slot>
+   </div>
+</script>
+
+{% endverbatim %}
+
+
+<script type="text/javascript">
+   Vue.component('ui-dropdown', {
+      props: [],
+      template: '#dropdown',
+      mounted: function () {
+         $(this.$el)
+            .dropdown()
+            .dropdown('setting', 'onChange', (value) => {
+               this.$emit('input', value);
+            });
+      }
+   });
+</script>

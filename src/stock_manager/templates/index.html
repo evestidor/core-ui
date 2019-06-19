@@ -14,16 +14,23 @@
             <ui-menu></ui-menu>
             <div class="ui container">
                 <h1 class="ui header">Stocks</h1>
-
                 <form v-on:submit.prevent="addStock()">
                     <div class="ui action input">
-                        <input
-                            type="text"
-                            v-model="newStock.symbol"
-                            placeholder="Ação (e.g. ABEV3)"
-                            required="required"
-                            :disabled="loading===true"
-                        />
+                        <ui-dropdown v-model="newStock.symbol">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Selecione uma ação</div>
+                            <div class="menu">
+                                <div
+                                    class="item"
+                                    v-for="stock in availableStocks"
+                                    :key="stock.symbol"
+                                    :data-value="stock.symbol"
+                                >
+                                    ${stock.symbol}
+                                </div>
+                            </div>
+                        </ui-dropdown>
+
                         <button
                             type="submit"
                             class="ui green button"
@@ -44,20 +51,29 @@
                         label="Nome"
                     ></ui-table-column>
                     <ui-table-column
+                        attr="price"
+                        label="Preço"
+                        type="number"
+                    ></ui-table-column>
+                    <ui-table-column
                         attr="quantity"
                         label="Quantidade"
+                        type="number"
                     ></ui-table-column>
                     <ui-table-column
                         attr="cost"
                         label="Custo"
+                        type="number"
                     ></ui-table-column>
                     <ui-table-column
                         attr="value"
                         label="Valor de mercado"
+                        type="number"
                     ></ui-table-column>
                     <ui-table-column
                         attr="gain_loss"
                         label="Ganho de capital"
+                        type="number"
                     ></ui-table-column>
                 </ui-table>
                 <div class="loading" v-if="loading===true">Loading&#8230;</div>
