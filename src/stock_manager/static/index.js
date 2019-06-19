@@ -10,6 +10,7 @@ new Vue({
    mounted: function() {
       this.getStocks();
       this.getAvailableStocks();
+      setInterval(this.updatePrices, 3000);
    },
    methods: {
       getAvailableStocks: function() {
@@ -26,6 +27,54 @@ new Vue({
             this.stocks = payload;
             this.loading.table = false;
          });
+      },
+
+      updatePrices: function() {
+         const vm = this;
+
+         StockAPIService().getStocks().then(function(payload) {
+            const prices = getPrices(payload);
+            const changedPrices = getChangedPrices(prices);
+
+            updateStockPrices(changedPrices);
+            highlightChangedPrices(changedPrices);
+         });
+
+         function getPrices(payload) {
+            return payload.reduce((obj, item) => {
+               obj[item.symbol] = item.price;
+               return obj;
+            }, {});
+         }
+
+         function getChangedPrices(prices) {
+            return vm.stocks.reduce((obj, item) => {
+               if (item.price !== prices[item.symbol])
+                  obj[item.symbol] = prices[item.symbol];
+               return obj;
+            }, {});
+         }
+
+         function updateStockPrices(changedPrices) {
+            vm.stocks = vm.stocks.map(item => {
+               if (changedPrices[item.symbol])
+                  item.price = changedPrices[item.symbol];
+               return item;
+            });
+         }
+
+         function highlightChangedPrices(changedPrices) {
+            vm
+               .$refs
+               .stocksTable
+               .$refs
+               .rows
+               .filter(row => Boolean(changedPrices[row.rowId]))
+               .map(row => row.$refs.price)
+               .forEach(el => {
+                  $(el).transition('glow');
+               });
+         }
       },
 
       addStock: function() {

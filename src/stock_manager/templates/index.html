@@ -41,7 +41,7 @@
                     </div>
                 </form>
 
-                <ui-table :rows="stocks">
+                <ui-table :rows="stocks" row-id="symbol" ref="stocksTable">
                     <ui-table-column
                         attr="symbol"
                         label="Ação"

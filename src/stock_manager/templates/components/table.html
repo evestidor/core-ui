@@ -16,9 +16,11 @@
       <tbody>
          <ui-table-row
             v-for="row in displayedRows"
-            :key="row.id"
+            :key="getRowId(row)"
             :row="row"
+            :row-id="getRowId(row)"
             :columns="columns"
+            ref="rows"
          />
       </tbody>
    </table>
@@ -26,7 +28,11 @@
 
 <script type="text/x-template" id="table-row">
    <tr>
-      <td v-for="column in columns" :class="{'right aligned': column.type == 'number' }">
+      <td
+         v-for="column in columns"
+         :class="{'right aligned': column.type == 'number' }"
+         :ref="column.attr"
+      >
          <span v-if="row[column.attr]">
             {{ row[column.attr] }}
          </span>
@@ -42,7 +48,7 @@
 
 <script type="text/javascript">
    Vue.component('ui-table', {
-      props: ['rows'],
+      props: ['rows', 'row-id'],
       template: '#table',
       data: function () { return {
          columns: [],
@@ -51,6 +57,11 @@
          displayedRows: function() {
             return this.rows;
          }
+      },
+      methods: {
+         getRowId: function(row) {
+            return row[this.rowId];
+         },
       },
       mounted: function () {
          this.columns = this.$slots.default
@@ -71,7 +82,7 @@
    });
 
    Vue.component('ui-table-row', {
-      props: ['columns', 'row'],
+      props: ['columns', 'row', 'row-id'],
       template: '#table-row',
    });
 </script>
