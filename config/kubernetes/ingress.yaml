@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: evestidor-ui
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: evestidor.local
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: evestidor-ui
+              servicePort: 8000

@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 ipython = "*"
 django = "*"
+sentry-sdk = "==0.9.5"
+whitenoise = "*"
+django-environ = "*"
 
 [dev-packages]
 pytest = "*"

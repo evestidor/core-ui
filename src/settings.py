@@ -1,34 +1,74 @@
 import os
+import environ
+import sentry_sdk
+
+
+env = environ.Env(
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+)
+
+ENVIRONMENT = env('ENVIRONMENT', default='localhost')
+
+# PATHS ----------------------------------------------------------------------
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 't@=o2!@z0(anh%!vhj)gof(q=_=s^)gafcz3@s9%o68)034qrm'
+ROOT_DIR_NAME = 'src'
 
-DEBUG = True
+PROJECT_DIR = os.path.join(BASE_DIR, ROOT_DIR_NAME)
 
-ALLOWED_HOSTS = ['*']
 
-INSTALLED_APPS = [
+# DJANGO SECURITY ------------------------------------------------------------
+
+SECRET_KEY = env('SECRET_KEY')
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+DEBUG = env('DEBUG', default=False)
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+
+# DJANGO APPLICATION ---------------------------------------------------------
+
+ROOT_URLCONF = '{}.urls'.format(ROOT_DIR_NAME)
+
+WSGI_APPLICATION = '{}.wsgi.application'.format(ROOT_DIR_NAME)
+
+APPEND_SLASH = True
+
+
+# DJANGO APPS ----------------------------------------------------------------
+
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'src.stock_manager',
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+THIRD_PARTY_APPS = []
+
+LOCAL_APPS = [
+    '{}.stock_manager'.format(ROOT_DIR_NAME),
 ]
 
-ROOT_URLCONF = 'src.urls'
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+
+# DATABASE -------------------------------------------------------------------
+
+DATABASES = {
+    # reads os.environ['DATABASE_URL']
+    'default': env.db(),
+}
+
+
+# TEMPLATES ------------------------------------------------------------------
 
 TEMPLATES = [
     {
@@ -46,22 +86,40 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'src.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
-    }
-}
+# STATIC ---------------------------------------------------------------------
 
-VALIDATOR_PREFIX = 'django.contrib.auth.password_validation'
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': '{}.UserAttributeSimilarityValidator'.format(VALIDATOR_PREFIX)},
-    {'NAME': '{}.MinimumLengthValidator'.format(VALIDATOR_PREFIX)},
-    {'NAME': '{}.CommonPasswordValidator'.format(VALIDATOR_PREFIX)},
-    {'NAME': '{}.NumericPasswordValidator'.format(VALIDATOR_PREFIX)},
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
 ]
+
+USE_WHITENOISE = env.bool('USE_WHITENOISE', default=True)
+
+if USE_WHITENOISE:
+    STATICFILES_STORAGE = (
+        'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    )
+
+
+# MIDDLEWARES ----------------------------------------------------------------
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+if USE_WHITENOISE:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+
+# I18N & L10N -----------------------------------------------------------------
 
 LANGUAGE_CODE = 'en-us'
 
@@ -73,8 +131,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# ERROR REPORTING -------------------------------------------------------------
+
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[sentry_sdk.integrations.django.DjangoIntegration()],
+        environment=ENVIRONMENT,
+    )
