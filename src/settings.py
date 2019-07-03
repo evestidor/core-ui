@@ -153,5 +153,5 @@ if SENTRY_DSN:
 
 API_GATEWAY_URL = env(
     'API_GATEWAY_URL',
-    default='http://evestidor.com.br/api/',
+    default='https://evestidor.com.br/api/',
 )
