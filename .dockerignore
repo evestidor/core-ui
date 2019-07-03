@@ -6,3 +6,4 @@
 !Pipfile.lock
 !pytest.ini
 !manage.py
+!static
