@@ -67,7 +67,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 DATABASES = {
     # reads os.environ['DATABASE_URL']
-    'default': env.db(),
+    'default': env.db(default='sqlite:///local.db'),
 }
 
 
