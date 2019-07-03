@@ -11,7 +11,7 @@ env = environ.Env(
 
 ENVIRONMENT = env('ENVIRONMENT', default='localhost')
 
-URL_PREFIX = env('URL_PREFIX', default='/app')
+URL_PREFIX = env('URL_PREFIX', default='app')
 
 # PATHS ----------------------------------------------------------------------
 
@@ -92,7 +92,7 @@ TEMPLATES = [
 
 # STATIC ---------------------------------------------------------------------
 
-STATIC_URL = '/static/'
+STATIC_URL = '/{}/static/'.format(URL_PREFIX)
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
