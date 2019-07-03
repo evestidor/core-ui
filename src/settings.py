@@ -11,7 +11,7 @@ env = environ.Env(
 
 ENVIRONMENT = env('ENVIRONMENT', default='localhost')
 
-URL_PREFIX = env('ENVIRONMENT', default='/app')
+URL_PREFIX = env('URL_PREFIX', default='/app')
 
 # PATHS ----------------------------------------------------------------------
 
