@@ -11,6 +11,8 @@ env = environ.Env(
 
 ENVIRONMENT = env('ENVIRONMENT', default='localhost')
 
+URL_PREFIX = env('ENVIRONMENT', default='/app')
+
 # PATHS ----------------------------------------------------------------------
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
