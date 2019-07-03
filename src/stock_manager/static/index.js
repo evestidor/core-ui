@@ -118,7 +118,7 @@ function post(url, payload) {
 
 function NetworkHandler() {
    return axios.create({
-      baseURL: 'http://0.0.0.0:8001',
+      baseURL: '{{ API_GATEWAY_URL }}',
       withCredentials: true,
       headers: {'Content-Type': 'application/json'},
    });

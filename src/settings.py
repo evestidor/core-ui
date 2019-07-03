@@ -147,3 +147,11 @@ if SENTRY_DSN:
         integrations=[django.DjangoIntegration()],
         environment=ENVIRONMENT,
     )
+
+
+# API GATEWAY ----------------------------------------------------------------
+
+API_GATEWAY_URL = env(
+    'API_GATEWAY_URL',
+    default='http://evestidor.com.br/api/',
+)
