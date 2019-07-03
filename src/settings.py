@@ -1,6 +1,7 @@
 import os
 import environ
 import sentry_sdk
+from sentry_sdk import integrations as sentry_integrations
 
 
 env = environ.Env(
@@ -139,6 +140,6 @@ SENTRY_DSN = env('SENTRY_DSN', default=None)
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        integrations=[sentry_sdk.integrations.django.DjangoIntegration()],
+        integrations=[sentry_integrations.django.DjangoIntegration()],
         environment=ENVIRONMENT,
     )
