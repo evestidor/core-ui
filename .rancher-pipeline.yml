@@ -1,0 +1,16 @@
+stages:
+- name: build
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: evestidor/ui:master
+      pushRemote: true
+      registry: index.docker.io
+    when:
+      branch:
+        include:
+        - master
+timeout: 60
+branch: {}
+notification: {}
